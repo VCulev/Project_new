@@ -3,5 +3,7 @@
   "PORT": 4000,
   "WORKERS": 1,
   "FAST": false,
-  "DEBUG": false
+  "DEBUG": false,
+  "MONGO_URL": "mongodb://localhost:27017/",
+  "REDIS_URL": "redis://localhost:6379"
 }
