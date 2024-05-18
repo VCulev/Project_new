@@ -2,9 +2,32 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz App</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../styles/style.css">
 </head>
-<body>
+<body class="bg-gradient-to-r from-blue-500 to-lightblue-600">
+    <!-- Navbar -->
+    <div class="navbar">
+        <a href="home.html" class="active">Home</a>
+        <a href="index.html">Quiz</a>
+        <a href="about.html">About</a>
+        <div class="navbar-right">
+            <a href="login.html">Login</a>
+        </div>
+    </div>
 
+    <!-- Quiz Container -->
+    <div class="container mx-auto py-10">
+        <div class="max-w-md mx-auto bg-white p-8 rounded-md shadow-md">
+            <h2 class="text-xl font-bold mb-4">Quiz</h2>
+            <div id="quizContainer" class="space-y-4"></div>
+            <button id="submitBtn" class="w-full bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 mt-4">Submit</button>
+            <div id="feedbackContainer" class="mt-5 text-red-600 text-center"></div>
+        </div>
+    </div>
+
+    <script src="../js_files/quiz.js"></script>
 </body>
 </html>

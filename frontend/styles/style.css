@@ -1,0 +1,59 @@
+.answer {
+    cursor: pointer;
+    margin-bottom: 10px;
+    transition: background-color 0.3s;
+}
+
+.answer.selected {
+    background-color: #d0ebff;
+}
+
+.answer.selected:hover {
+    background-color: #a5d8ff;
+}
+
+.answer:hover {
+    background-color: #f0f0f0;
+}
+
+.selected {
+    background-color: #d0ebff;
+}
+
+#quizContainer {
+    width: 80%;
+    max-width: 600px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.navbar {
+    background-color: #1976D2;
+    overflow: hidden;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+}
+
+.navbar a {
+    color: white;
+    text-decoration: none;
+    padding: 10px;
+    transition: background-color 0.3s;
+}
+
+.navbar a:hover {
+    color: #0d47a1;
+}
+
+.feedback-correct {
+    color: #28a745;
+}
+
+.feedback-incorrect {
+    color: #ffc107;
+}

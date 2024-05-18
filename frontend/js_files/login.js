@@ -1,35 +1,33 @@
-let resetForm = (formId) => {
-    const form = document.getElementById(formId);
-    form.reset();
+const resetForm = formId => {
+    document.getElementById(formId).reset();
 }
 
-document.getElementById('loginFormContent').addEventListener('submit', async function(event) {
+document.getElementById('loginFormContent').addEventListener('submit', async event => {
     event.preventDefault();
-    const formData = new FormData(this);
-    const jsonData = {};
-    for (const [key, value] of formData.entries()) {
-        jsonData[key] = value;
-    }
+    const formData = new FormData(event.target);
+    const jsonData = Object.fromEntries(formData.entries());
 
-    const response = await fetch('http://localhost:4000/api/login_user', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(jsonData)
-    });
+    try {
+        const response = await fetch('http://localhost:4000/api/login_user', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(jsonData)
+        });
 
-    const data = await response.json();
-    if (response.ok) {
-        // Redirect to index.html after successful login
-        window.location.href = 'index.html';
-    } else {
-        document.getElementById('feedbackMessage').innerText = data.description;
+        const data = await response.json();
+        if (response.ok) {
+            window.location.href = 'index.html';
+        } else {
+            document.getElementById('feedbackMessage').innerText = data.description;
+        }
+    } catch (error) {
+        document.getElementById('feedbackMessage').innerText = 'Error logging in.';
     }
 });
 
-// Show registration form when "Sign up" link is clicked
-document.getElementById('showRegisterFormLink').addEventListener('click', function(event) {
+document.getElementById('showRegisterFormLink').addEventListener('click', event => {
     event.preventDefault();
     resetForm('loginFormContent');
     document.getElementById('loginForm').classList.add('hidden');
