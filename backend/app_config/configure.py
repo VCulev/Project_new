@@ -31,6 +31,8 @@ def get_app():
     sanic_app.add_route(handle_options_route, "api/scrape-newsletter", methods=["OPTIONS"], ctx_refsanic=sanic_app,
                         name="handle_options_scrape_newsletter")
     sanic_app.add_route(logout_user, "api/logout_user", methods=["POST"], ctx_refsanic=sanic_app)
+    sanic_app.add_route(handle_options_route, "api/logout_user", methods=["OPTIONS"], ctx_refsanic=sanic_app,
+                        name="handle_options_logout_user")
     sanic_app.on_response(add_response_headers)
 
     return sanic_app
