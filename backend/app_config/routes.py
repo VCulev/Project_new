@@ -121,3 +121,14 @@ async def scrape_questions(request):
     """Handle request to scrape Stack Overflow questions."""
     questions = scrape_stackoverflow()
     return response.json(questions)
+
+
+async def logout_user(request):
+    """Handle user logout."""
+    token = request.headers.get("Authorization")
+    if not token:
+        return json_response(401, description="Authorization token not provided.")
+
+    sanic_ref = request.route.ctx.refsanic.ctx
+    await redis_db.forget_user_session(sanic_ref.redis, token)
+    return json_response(200, description="User successfully logged out.")
