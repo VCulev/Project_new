@@ -18,6 +18,11 @@ document.getElementById('loginFormContent').addEventListener('submit', async eve
 
         const data = await response.json();
         if (response.ok) {
+            // Store the token in localStorage
+            localStorage.setItem('token', data.token);
+            localStorage.setItem('userId', data.user_id);
+
+            // Redirect to index.html
             window.location.href = 'index.html';
         } else {
             document.getElementById('feedbackMessage').innerText = data.description;
