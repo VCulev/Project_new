@@ -31,32 +31,37 @@ document.addEventListener('DOMContentLoaded', async () => {
             <p class="text-lg font-semibold">${decodedQuestion}</p>
         `;
         const answersElement = document.createElement('div');
-        question.incorrect_answers.forEach((answer, index) => {
-            const decodedAnswer = decodeURIComponent(answer);
-            answersElement.innerHTML += `
+        const answers = [];
+        const answerIndices = getShuffledIndices(question.incorrect_answers.length + 1);
+
+
+        answerIndices.forEach(index => {
+            const decodedAnswer = index === question.incorrect_answers.length
+                ? decodeURIComponent(question.correct_answer)
+                : decodeURIComponent(question.incorrect_answers[index]);
+            answers.push(`
                 <div class="answer p-2 rounded-md border" data-index="${index}">
-                    <span>${decodedAnswer}</span>
+                    <span>${renderAnswer(decodedAnswer)}</span>
                 </div>
-            `;
+            `);
         });
-        const correctIndex = question.incorrect_answers.length;
-        const decodedCorrectAnswer = decodeURIComponent(question.correct_answer);
-        answersElement.innerHTML += `
-            <div class="answer p-2 rounded-md border" data-index="${correctIndex}">
-                <span>${decodedCorrectAnswer}</span>
-            </div>
-        `;
+
+        answersElement.innerHTML = answers.join('');
         questionElement.appendChild(answersElement);
         quizContainer.innerHTML = '';
         quizContainer.appendChild(questionElement);
 
         selectedAnswerIndex = -1;
 
-        const answers = quizContainer.querySelectorAll('.answer');
-        answers.forEach(answer => {
+        const answerElements = quizContainer.querySelectorAll('.answer');
+        answerElements.forEach(answer => {
             answer.classList.remove('selected');
             answer.addEventListener('click', selectAnswer);
         });
+    };
+
+    const renderAnswer = (answer) => {
+        return answer.replace(/</g, '&lt;').replace(/>/g, '&gt;');
     };
 
     const selectAnswer = (event) => {
@@ -161,6 +166,22 @@ document.addEventListener('DOMContentLoaded', async () => {
             console.error(error.message);
             feedbackContainer.innerText = 'Error fetching quiz questions.';
         }
+    };
+
+    const getShuffledIndices = (length) => {
+        const indices = [];
+        for (let i = 0; i < length; i++) {
+            indices.push(i);
+        }
+        return shuffleArray(indices);
+    };
+
+    const shuffleArray = (array) => {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+        return array;
     };
 
     await initializeQuiz();
