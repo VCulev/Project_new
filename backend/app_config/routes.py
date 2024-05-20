@@ -1,34 +1,19 @@
-import requests
 from bs4 import BeautifulSoup
-from sanic import response
+from httpx import AsyncClient
 from backend.authentification.functionality import (
     validate_schema_login_route,
     validate_schema_registration_route
 )
-from backend.utils.raise_utils import json_response
+from backend.utils.raise_utils import json_response, j_response
 from backend.utils.auth_hash import generate_user_id
 from backend.utils.token_utils import generate_auth_user_pack
 from backend.mongodb import mongo_utils as mongodb
 from backend.redisdb import redis_utils as redis_db
 
-OPEN_TRIVIA_API_BASE_URL = "https://opentdb.com/api.php"
-
 
 async def add_response_headers(_, responses):
     """Add headers to responses."""
     responses.headers["Accept"] = "application/json"
-
-
-async def handle_options_route(request):
-    """Handle OPTIONS request."""
-    headers = {
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "POST",
-        "Access-Control-Allow-Headers": "Content-Type, Authorization"
-    }
-
-    if request.method == "OPTIONS":
-        return json_response(200, description="[OK]", headers=headers)
 
 
 async def register_user(request):
@@ -78,6 +63,17 @@ async def login_user(request):
                          description="User successfully logged in.")
 
 
+async def logout_user(request):
+    """Handle user logout."""
+    token = request.headers.get("Authorization")
+    if not token:
+        return json_response(401, description="Authorization token not provided.")
+
+    sanic_ref = request.route.ctx.refsanic.ctx
+    await redis_db.forget_user_session(sanic_ref.redis, token)
+    return json_response(200, description="User successfully logged out.")
+
+
 async def get_quiz(request):
     """Fetch a programming quiz."""
     params = {
@@ -88,22 +84,29 @@ async def get_quiz(request):
         "category": 18
     }
 
-    response_from_api = requests.get(OPEN_TRIVIA_API_BASE_URL, params=params)
+    async with AsyncClient() as client:
+        response = await client.get(
+            "https://opentdb.com/api.php",
+            params=params)
 
-    if response_from_api.ok:
-        quiz_data = response_from_api.json()
-        return response.json(quiz_data)
-    else:
-        return json_response(500, description="Can't generate quiz.")
+        if response.status_code != 200:
+            return json_response(500, description="Failed to fetch quiz.")
+
+        data = response.json()
+        return j_response(data)
 
 
-def scrape_stackoverflow():
+async def scrape_stackoverflow():
     """Scrape Stack Overflow for recent questions."""
-    url = 'https://stackoverflow.com/questions'
-    response = requests.get(url)
+    async with AsyncClient() as client:
+        response = await client.get(
+            "https://stackoverflow.com/questions"
+        )
 
-    if response.status_code == 200:
-        soup = BeautifulSoup(response.text, 'html.parser')
+        if response.status_code != 200:
+            return json_response(500, description="Failed to scrape Stack Overflow.")
+
+        soup = BeautifulSoup(response.text, "html.parser")
         questions = soup.find_all('div', class_='s-post-summary')
         results = []
 
@@ -113,22 +116,21 @@ def scrape_stackoverflow():
             results.append({'title': title, 'link': f"https://stackoverflow.com{link}"})
 
         return results
-    else:
-        return []
 
 
 async def scrape_questions(request):
     """Handle request to scrape Stack Overflow questions."""
-    questions = scrape_stackoverflow()
-    return response.json(questions)
+    questions = await scrape_stackoverflow()
+    return j_response(questions)
 
 
-async def logout_user(request):
-    """Handle user logout."""
-    token = request.headers.get("Authorization")
-    if not token:
-        return json_response(401, description="Authorization token not provided.")
+async def handle_options_route(request):
+    """Handle OPTIONS request."""
+    headers = {
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "POST",
+        "Access-Control-Allow-Headers": "Content-Type, Authorization"
+    }
 
-    sanic_ref = request.route.ctx.refsanic.ctx
-    await redis_db.forget_user_session(sanic_ref.redis, token)
-    return json_response(200, description="User successfully logged out.")
+    if request.method == "OPTIONS":
+        return json_response(200, description="[OK]", headers=headers)
