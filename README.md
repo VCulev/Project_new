@@ -105,4 +105,16 @@ To run the tests for Tech Insights Hub:
 - **NotFound (404)**
 - **ServerError (500)**
 
+## API Documentation
+
+The API documentation is generated using the sanic_ext library with OpenAPI.
+
+## Accessing the Documentation
+You can access the API documentation either by viewing the code in routes.py or by running the server and visiting the following URL:
+```bash
+> openapi [http://127.0.0.1:4000/docs]
+```
+
+Click the link above to view the API routes documentation.
+
 Thank you for trying out Tech Insights Hub!

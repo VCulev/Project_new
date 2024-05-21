@@ -1,4 +1,5 @@
 from sanic import Sanic
+from sanic_ext import Extend
 from json import load
 from backend.app_config.routes import (register_user, login_user, add_response_headers,
                                        handle_options_route, get_quiz, scrape_questions,
@@ -19,6 +20,8 @@ def get_app():
     sanic_app.config.update(read_config())
     CORS(sanic_app)
     sanic_app.register_listener(initialize_database, "before_server_start")
+
+    Extend(sanic_app)
 
     sanic_app.add_route(register_user, "/api/register_user", methods=["POST"], ctx_refsanic=sanic_app)
     sanic_app.add_route(login_user, "/api/login_user", methods=["POST"], ctx_refsanic=sanic_app)
