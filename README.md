@@ -117,4 +117,24 @@ You can access the API documentation either by viewing the code in routes.py or 
 
 Click the link above to view the API routes documentation.
 
+
+## Import Errors that You Might Get
+
+If you encounter import errors such as 
+```bash
+no module named backend
+```
+ensure that you adjust your import paths as follows:
+
+```bash
+from Tech_Insights_Hub.backend.app_config.routes import ...
+```
+and
+```bash
+file_handler = open("app_config/settings.json")
+```
+in the configure.py file.
+
+
+
 Thank you for trying out Tech Insights Hub!
