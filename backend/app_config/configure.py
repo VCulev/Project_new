@@ -9,7 +9,7 @@ from sanic_cors import CORS
 
 
 def read_config() -> dict:
-    file_handler = open("backend/app_config/settings.json", "r")
+    file_handler = open("app_config/settings.json", "r")
     server_config = load(file_handler)
     file_handler.close()
     return server_config
@@ -18,7 +18,24 @@ def read_config() -> dict:
 def get_app():
     sanic_app = Sanic("QuizGenerator")
     sanic_app.config.update(read_config())
-    CORS(sanic_app)
+
+    cors_config = {
+        "origins": "http://localhost:63342",
+        "methods": ["GET", "POST", "OPTIONS"],
+        "allow_headers": ["Content-Type", "Authorization"],
+        "supports_credentials": True,
+    }
+
+    CORS(sanic_app, resources={r"/api/*": cors_config})
+
+    @sanic_app.middleware('response')
+    async def add_cors_headers(request, response):
+        response.headers['Access-Control-Allow-Origin'] = 'http://localhost:63342'
+        response.headers['Access-Control-Allow-Methods'] = 'GET, POST, OPTIONS'
+        response.headers['Access-Control-Allow-Headers'] = 'Content-Type, Authorization'
+        response.headers['Access-Control-Allow-Credentials'] = 'true'
+        return response
+
     sanic_app.register_listener(initialize_database, "before_server_start")
 
     Extend(sanic_app)
