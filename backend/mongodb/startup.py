@@ -12,9 +12,9 @@ INDEXES = {
     "quiz": [
         ('id', dict(unique=True, name='user_id')),
         ('name', dict(name='user_name')),
-        ('login', dict(name='user_login')),
-        ('email', dict(name='user_email')),
-        ('password', dict(name='user_password'))
+        ('login', dict(name='login')),
+        ('email', dict(name='email')),
+        ('password', dict(name='password'))
     ]
 }
 
