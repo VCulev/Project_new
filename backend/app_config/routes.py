@@ -1,6 +1,6 @@
 from bs4 import BeautifulSoup
 from httpx import AsyncClient
-from backend.authentification.functionality import (
+from backend.authentication.functionality import (
     validate_schema_login_route,
     validate_schema_registration_route
 )

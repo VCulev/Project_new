@@ -34,29 +34,36 @@ The main goal of Tech Insights Hub is to provide an engaging platform for learni
 To get started with Tech Insights Hub:
 
 1. Clone the repository:
-    ```bash
-    git clone https://github.com/VCulev/Project_new.git
-    ```
+   ```bash
+   git clone https://github.com/VCulev/Tech_Insights_Hub.git
+   ```
    or
    ```bash
-    git clone git@github.com:VCulev/Project_new.git
-    ```
+   git clone git@github.com:VCulev/Tech_Insights_Hub.git
+   ```
 
 2. Navigate to the project directory:
-    ```bash
-    cd Project_new
-    ```
+   ```bash
+   cd Tech_Insights_Hub
+   ```
+   And create a virtual environment:
+   ```bash
+   python3.11 -m venv venv
+   ```
+   ```bash
+   source venv/bin/activate
+   ```
 
 3. Install the required libraries:
-    ```bash
-    pip install -r requirements.txt
-    ```
+   ```bash
+   pip install -r requirements.txt
+   ```
 
 4. Ensure you have Docker installed and running on your machine. Start the Docker containers:
-    ```bash
-    cd backend
-    docker-compose up -d
-    ```
+   ```bash
+   cd backend
+   docker-compose up -d
+   ```
     You should see messages indicating that the containers for Redis and MongoDB have started.
 
 5. Start the Sanic server:
@@ -79,23 +86,23 @@ To get started with Tech Insights Hub:
 To run the tests for Tech Insights Hub:
 
 1. Navigate to the tests directory and make sure that Docker and the server are running :
-    ```bash
-    cd backend/tests
-    ```
+   ```bash
+   cd backend/tests
+   ```
 
 2. To run the authentication tests:
-    ```bash
-    cd auth_test
-    pytest
-    ```
+   ```bash
+   cd auth_test
+   pytest
+   ```
 
 3. To run the quiz and scraping tests:
-    ```bash
-    cd test_quiz_and_scraping
-    pytest
-    ```
+   ``bash
+   cd test_quiz_and_scraping
+   pytest
+   ```
 
-    Alternatively, you can open the test files in your IDE and run them directly.
+   Alternatively, you can open the test files in your IDE and run them directly.
 
 ## API Response Codes
 
@@ -135,6 +142,60 @@ file_handler = open("app_config/settings.json")
 ```
 in the configure.py file.
 
+## Project Structure
+
+```arduino
+Tech_Insights_Hub/
+├── backend/
+│   ├── app_config/
+│   │   ├── configure.py
+│   │   ├── routes.py
+│   │   └── settings.json
+│   ├── authentication/
+│   │   └── functionality.py
+│   ├── docker/
+│   │   ├── MongoDB/
+│   │   │   └── DockerFile
+│   │   └── Redis/
+│   │       └── DockerFile
+│   ├── mongodb/
+│   │   ├── mongo_utils.py
+│   │   └── startup.py
+│   ├── redisdb/
+│   │   └── redis_utils.py
+│   ├── tests/
+│   │   ├── modules/
+│   │   │   └── modules.py
+│   │   ├── test_auth/
+│   │   │   └── test_authentication.py
+│   │   └── test_quiz_and_scraping/
+│   │       └── test_quiz_and_scraping_routes.py
+│   ├── utils/
+│   │   ├── auth_hash.py
+│   │   ├── raise_utils.py
+│   │   └── token_utils.py
+│   ├── docker-compose.yml
+│   ├── main.py
+│   └── requirements.txt
+└── frontend/
+    ├── html_files/
+    │   ├── about.html
+    │   ├── index.html
+    │   ├── login.html
+    │   ├── news.html
+    │   └── register.html
+    ├── js_files/
+    │   ├── auth.js
+    │   ├── easter_egg.js
+    │   ├── login.js
+    │   ├── news.js
+    │   ├── quiz.js
+    │   └── register.js
+    └── css_files/
+        ├── about.css
+        ├── news_style.css
+        └── style.css
+```
 
 
 Thank you for trying out Tech Insights Hub!
