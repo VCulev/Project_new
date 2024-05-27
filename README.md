@@ -97,7 +97,7 @@ To run the tests for Tech Insights Hub:
    ```
 
 3. To run the quiz and scraping tests:
-   ``bash
+   ```bash
    cd test_quiz_and_scraping
    pytest
    ```
